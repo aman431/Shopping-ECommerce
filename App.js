@@ -1,21 +1,51 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { BottomNavigation } from 'react-native-paper';
+import { Button, Text, View } from 'react-native';
+import Home from './src/screens/Home';
+import Cart from './src/screens/Cart';
+import Login from './src/screens/Login';
+import { Provider } from 'react-redux'
+import store from './store';
+import Navigator from './routes/index';
 
-export default function App() {
+
+function App() {
+
+  // const [index, setIndex] = React.useState(0);
+  // const [routes] = React.useState([
+  //   { key: 'login', title: 'Login', icon: 'login' },
+  //   { key: 'home', title: 'Home', icon: 'home' },
+  //   { key: 'cart', title: 'Cart', icon: 'cart' },
+  // ]);
+
+  // const renderScene = BottomNavigation.SceneMap({
+  //   login: Login,
+  //   home: Home, 
+  //   cart: Cart
+  // });
+
+  // const renderScene = ({ route, jumpTo }) => {
+  //   switch (route.key) {
+  //     case 'login':
+  //       return <Login jumpTo={jumpTo} />;
+  //     case 'home':
+  //       return <Home jumpTo={jumpTo} />;
+  //     case 'cart':
+  //       return <Cart jumpTo={jumpTo} />;
+  //   }
+  // }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <Navigator />
+      {/* <BottomNavigation
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+      /> */}
+    </Provider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
+
