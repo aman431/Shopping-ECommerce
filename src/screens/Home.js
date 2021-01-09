@@ -1,98 +1,116 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native';
-import { Card, Button, Avatar, IconButton } from 'react-native-paper'
-import { category, selectedItem } from '../../actions/index';
+import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
+import { Card, IconButton, FAB, Button } from 'react-native-paper';
+import {category, selectedItem, Reset} from '../../actions/index'
 import { connect } from 'react-redux';
+const Home = ({ navigation, category, category_data, selectedItem, Reset }) => {
 
-const Home = ({ category, category_data, navigation, selectedItem, count }) => {
-
-    let kid = "kid"
     useEffect(() => {
-        category(kid);
-    }, [category]);
-    const fetch_data = (item) => {
+        category()
+    },[category])
+
+    console.log(category_data);
+
+    const Item = (item) => {
         return (
-            <View>
-                <Card key={item.id} style={styles.cards} >
-                    <Card.Cover source={{ uri: item.imageURL }} />
-                    <View style={styles.body}>
-                        <Text style={styles.Text}>{item.name}</Text>
-                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <Text style={styles.Text}>₹ {item.price}</Text>
-                            <IconButton style={{marginTop: -3}}
-                                icon="cart"
-                                color="white"
-                                size={20}
-                                onPress={() => selectedItem(item.id, item.name, item.imageURL, item.price)}
-                            />
+            <Card style={styles.mycard} onPress={() => navigation.navigate("Product", { item })}>
+                <View style={styles.cardview}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Image
+                            style={{ width: 60, height: 60, borderRadius: 30 }}
+                            source={{ uri: item.image }}
+                        />
+                        <View style={{ marginLeft: 15 }}>
+                            <Text style={styles.Text}>{item.name}</Text>
+                            <Text>Rs {item.price}.00</Text>
                         </View>
                     </View>
-                </Card>
-            </View>
+                    <View>
+                        <IconButton
+                            icon="cart"
+                            color="black"
+                            size={20}
+                            onPress={() => {
+                                if(selectedItem(item.name, item.image, item.price, item.desc)){
+                                    return Reset()
+                                }
+                            }}
+                        />
+                    </View>
+                </View>
+            </Card >
         )
     }
-
     return (
-        <View style={{ flex: 1, margin: 40, marginHorizontal: 20, marginBottom: 0, marginTop: 10 }}>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Avatar.Image style={styles.Avatar} size={44} source={require('../../assets/shopping-online.jpg')} />
-                <View style={styles.button}>
-                    <IconButton style={{}}
-                        icon="cart"
-                        color="white"
-                        size={20}
-                        onPress={() => navigation.navigate('Cart')}
-                    />
-                    <Text style={{ color: 'white', marginTop: 10 }}>{count}</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Cart')}><Text style={{ marginTop: 10, paddingLeft: 10, color: 'white', paddingRight: 15 }}>View Cart</Text></TouchableOpacity>
-                </View>
-            </View>
+        <View style={{ flex: 1 }}>
             <FlatList
                 data={category_data}
                 renderItem={({ item }) => {
-                    return fetch_data(item)
+                    return Item(item)
                 }}
-                keyExtractor={item => `${item.id}`}
+                keyExtractor={item => item.id}
+
+
             />
-            {/* {Item} */}
+            <View style={styles.Button}>
+            <Button
+                    style={styles.InputStyle}
+                    mode="contained"
+                    onPress={() => navigation.navigate("CliffexCart")}>
+                    Product
+            </Button>
+            <Button
+                    style={styles.InputStyle1}
+                    mode="contained"
+                    onPress={() => navigation.navigate("cart")}>
+                    <Text style={{color:'black'}}>Cart</Text>
+            </Button>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    cards: {
-        marginBottom: 20,
-        backgroundColor: 'black'
+    mycard: {
+        margin: 5,
+        padding: 5,
+        borderRadius:10
     },
-    Text: {
-        fontSize: 15,
-        color: 'white'
-    },
-    body: {
-        display: 'flex',
+    cardview: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: 10,
-        paddingTop: 10,
-        marginBottom: 10,
+        padding: 6,
     },
-    button: {
-        display: 'flex',
+    Text: {
+        fontSize: 20,
+        flexDirection: 'column'
+    },
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0,
+    },
+    Button: {
         flexDirection: 'row',
-        backgroundColor: 'black',
-        marginBottom: 10,
-        color: 'white',
-        borderRadius: 15
+        justifyContent: 'center',
     },
-    Avatar: {
-        marginBottom: 10
+    InputStyle:{
+        padding: 8,
+        width: "50%",
+        backgroundColor:'#50c5e6'
+    },
+    InputStyle1:{
+        padding: 8,
+        width: "50%",
+        backgroundColor:'lightgrey',
+        color: 'black'
     }
 })
 const mapStateToProps = (state) => {
     return {
-        category_data: state.category_data,
-        count: state.count
+        category_data: state.category_data
     }
 }
 
-export default connect(mapStateToProps, { category, selectedItem })(Home);
+export default connect(mapStateToProps, {category, selectedItem, Reset})(Home);

@@ -1,51 +1,52 @@
-import * as React from 'react';
-import { BottomNavigation } from 'react-native-paper';
-import { Button, Text, View } from 'react-native';
-import Home from './src/screens/Home';
-import Cart from './src/screens/Cart';
-import Login from './src/screens/Login';
-import { Provider } from 'react-redux'
+import React from 'react';
+import { Provider } from 'react-redux';
 import store from './store';
-import Navigator from './routes/index';
-
+import { StyleSheet, View } from 'react-native';
+import Home from '././src/screens/Home'
+import Cart from './src/screens/Cart';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack'
+import Product from './src/screens/Product';
+const Stack = createStackNavigator();
 
 function App() {
 
-  // const [index, setIndex] = React.useState(0);
-  // const [routes] = React.useState([
-  //   { key: 'login', title: 'Login', icon: 'login' },
-  //   { key: 'home', title: 'Home', icon: 'home' },
-  //   { key: 'cart', title: 'Cart', icon: 'cart' },
-  // ]);
 
-  // const renderScene = BottomNavigation.SceneMap({
-  //   login: Login,
-  //   home: Home, 
-  //   cart: Cart
-  // });
-
-  // const renderScene = ({ route, jumpTo }) => {
-  //   switch (route.key) {
-  //     case 'login':
-  //       return <Login jumpTo={jumpTo} />;
-  //     case 'home':
-  //       return <Home jumpTo={jumpTo} />;
-  //     case 'cart':
-  //       return <Cart jumpTo={jumpTo} />;
-  //   }
-  // }
-
+  const myOptions = {
+    title:"CliffexCart",
+    headerTintColor:"black",
+    headerStyle:{
+      backgroundColor:"white",
+    }
+  }
   return (
-    <Provider store={store}>
-      <Navigator />
-      {/* <BottomNavigation
-        navigationState={{ index, routes }}
-        onIndexChange={setIndex}
-        renderScene={renderScene}
-      /> */}
-    </Provider>
+    <View style={styles.cointainer}>
+      <Provider store={store}>
+      <Stack.Navigator>
+        <Stack.Screen 
+        name="CliffexCart" 
+        component={Home} 
+        options= {myOptions}/>
+        <Stack.Screen name="cart" component={Cart} options={{...myOptions,title:"Add To Cart"}}/>
+        <Stack.Screen name="Product" component={Product} options={{...myOptions, title:"Product"}} />
+      </Stack.Navigator>
+      </Provider>
+    </View>
   );
-};
+}
 
-export default App;
+export default () => {
+  return (
+    <NavigationContainer>
+      <App />
+    </NavigationContainer>
+  )
+}
+
+const styles = StyleSheet.create({
+  cointainer: {
+    flex: 1,
+    backgroundColor: '#e0e0e0',
+  }
+})
 
